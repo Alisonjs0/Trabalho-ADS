@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import { useState } from "react";
 
-import api from "@/app/api/axios/api";
+ import api from "@/app/api/axios/api";
 
 export default function SomeComponent() {
   const [cpf, setCpf] = useState("");
@@ -92,7 +92,7 @@ export default function SomeComponent() {
             </TouchableOpacity>
           </View>
 
-            <TouchableOpacity style={styles.button} onPress={handleLogin}>
+            <TouchableOpacity style={styles.button} onPress={e => router.push("/welcome/page")}>
               <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
         </ScrollView>
