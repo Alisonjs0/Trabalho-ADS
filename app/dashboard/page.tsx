@@ -13,58 +13,45 @@ import { Ionicons, MaterialIcons, Feather } from "@expo/vector-icons";
 import Navbar from "@/components/navbar";
 import { useNavigation } from "@react-navigation/native";
 
-import { useState, useEffect } from 'react';
-import api from '@/app/api/axios/api';
+import { useState, useEffect } from "react";
+import api from "@/app/api/axios/api";
 
-type Unidade = {
-  id: number;
-  name: string;
-  extinguisherAmount: number;
-  userId: {
-    id: number;
-    nome: string;
-    email: string;
-    cpf: string;
-    cargo: string;
-    senha: string | null;
-    setor: string | null;
-  };
-};
+import { useUserStore } from "@/app/global/userIdentity";
+
 
 export default function Dashboard() {
   const navigation = useNavigation();
+  const [nome, setNome] = useState('');
+
+  const user = useUserStore((state) => state.user);
+  useEffect(() => {
+    if (user !== null) {
+      setNome(user.nome);
+    }
+  }, [user]);
+
+
 
   const handleNavigate = (screen: string) => {
-    navigation.navigate(screen as never); // typecast para evitar erro de tipo
+    navigation.navigate(screen as never);
   };
 
-  
-  const [units, setUnits] = useState<Unidade[]>([]);
   const [amount, setAmount] = useState(0);
-const getUnits = async () => {
-  try {
-    const response = await api.get('/unit');
-    setUnits(response.data);
-  } catch (error) {
-    console.error('Erro ao buscar unidades:', error);
-  }
-};
+  const [extintor, setExtintor] = useState();
 
-// Chama apenas uma vez no carregamento
-useEffect(() => {
-  getUnits();
-}, []);
+  const fetchData = async () => {
+    try {
+      const response = await api.get("/extinguisher");
+      setExtintor(response.data);
+      setAmount(response.data.length);
+    } catch (error) {
+      console.error("Erro ao buscar unidades:", error);
+    }
+  };
 
-// Atualiza o amount sempre que units mudar
-useEffect(() => {
-  if (units.length > 0) {
-    const total = units.reduce(
-      (acc, unidade) => acc + (unidade.extinguisherAmount || 0),
-      0
-    );
-    setAmount(total);
-  }
-}, [units]);
+  useEffect(() => {
+    fetchData();
+  }, []); 
 
   return (
     <SafeAreaView style={styles.container}>
@@ -72,7 +59,7 @@ useEffect(() => {
       <View style={styles.header}>
         <View style={styles.helloContainer}>
           <View style={styles.helloRow}>
-            <Text style={styles.helloText}>Olá, Arthur</Text>
+            <Text style={styles.helloText}>Olá, {nome}</Text>
             <MaterialIcons
               name="local-fire-department"
               size={20}

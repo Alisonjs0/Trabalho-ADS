@@ -3,10 +3,9 @@ import { MaterialIcons, FontAwesome5, Entypo } from '@expo/vector-icons';
 import { Link } from 'expo-router';
 import { TouchableOpacity } from 'react-native';
 
-
-
 export default function SomeComponent() {
-  
+
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Dificuldade com a manutenção do seu sistema?</Text>

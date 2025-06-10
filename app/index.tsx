@@ -15,27 +15,36 @@ import {
 } from "react-native";
 import { useState } from "react";
 
+import { useUserStore } from "@/app/global/userIdentity";
+
  import api from "@/app/api/axios/api";
 
+interface IdentityUserState {
+  setUser: (newUserData: any) => void;
+}
+
 export default function SomeComponent() {
-  const [cpf, setCpf] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const setUser = useUserStore((state) => state.setUser);
 
   const router = useRouter();
 
    const handleLogin = async () => {
     try {
       const response = await api.post("/login", {
-        cpf,
+        email,
         password,
       });
 
-      const user = response.data;
+      console.log(response.data);
+      
+      setUser(response.data);
       router.push("/welcome/page");
-      console.log("Login efetuado com sucesso!");
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
-        if (cpf === "" || password === "") {
+        if (email === "" || password === "") {
           Alert.alert("Erro", "Preencha todos os campos.");
           return;
         }
@@ -65,15 +74,13 @@ export default function SomeComponent() {
           <Text style={styles.title}>Login</Text>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>CPF</Text>
+            <Text style={styles.label}>Email</Text>
             <TextInput
               style={styles.input}
-              placeholder="Digite seu CPF"
+              placeholder="Digite seu Email"
               placeholderTextColor="#aaa"
-              value={cpf}
-              keyboardType="numeric"
-              onChangeText={setCpf}
-              maxLength={11}
+              value={email}
+              onChangeText={setEmail}
             />
           </View>
 
@@ -92,7 +99,7 @@ export default function SomeComponent() {
             </TouchableOpacity>
           </View>
 
-            <TouchableOpacity style={styles.button} onPress={e => router.push("/welcome/page")}>
+            <TouchableOpacity style={styles.button} onPress={handleLogin}>
               <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
         </ScrollView>
