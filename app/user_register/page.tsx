@@ -11,6 +11,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
 
+import { useNavigation } from '@react-navigation/native';
+
 import api from "@/app/api/axios/api";
 
 type ErrosCadastro = {
@@ -23,6 +25,8 @@ type ErrosCadastro = {
 };
 
 export default function CadastroUsuario() {
+  const navigation = useNavigation();
+
   const [nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");
   const [cargo, setCargo] = useState("");
@@ -69,7 +73,14 @@ const validar = async () => {
 
     if (response.status === 201 || response.status === 200) {
       console.log("Cadastro realizado com sucesso!");
-      // Redirecionar ou limpar o formulário
+      
+      setNome("");
+      setCpf("");
+      setCargo("");
+      setSetor("");
+      setEmail("");
+      setSenha("");
+      setConfirmarSenha("");
     } else {
       console.log("Erro: resposta inesperada da API");
     }
@@ -81,7 +92,7 @@ const validar = async () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity style={styles.voltar}>
+      <TouchableOpacity style={styles.voltar} onPress={() => navigation.goBack()}>
         <Ionicons name="arrow-back" size={24} color="#000" />
         <Text style={styles.titulo}>Cadastrar usuários</Text>
       </TouchableOpacity>
@@ -108,6 +119,7 @@ const validar = async () => {
             placeholder="Ex: Arthuro Vidalgo"
             value={cpf}
             onChangeText={setCpf}
+            maxLength={11}
           />
         </View>
 

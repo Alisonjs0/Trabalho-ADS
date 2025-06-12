@@ -41,7 +41,11 @@ export default function SomeComponent() {
       console.log(response.data);
       
       setUser(response.data);
+ 
+      setEmail("");
+      setPassword("");
       router.push("/welcome/page");
+
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
         if (email === "" || password === "") {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -11,16 +11,32 @@ export default function RegisterSector() {
   const navigation = useNavigation();
 
   const [nome, setNome] = useState('');
-  const [tipo, setTipo] = useState('');
-  const [gerente, setGerente] = useState('');
 
   const handleNavigate = (screen: string) => {
     navigation.navigate(screen as never);
   };
 
   const handleSubmit = async () => {
-    const response = api.post('/sector')
+    if (!nome) {
+      Alert.alert('Erro', 'Por favor, preencha o nome da unidade.');
+      return;
+    }
+
+    try {
+      const response = await api.post('/unit', {
+        name: nome
+      });
+
+      if (response.status === 201 || response.status === 200) {
+        Alert.alert('Sucesso', 'Unidade cadastrada com sucesso!');
+        setNome('');
+      }
+    } catch (error) {
+      console.error('Erro ao cadastrar unidade:', error);
+      Alert.alert('Erro', 'Ocorreu um problema ao se conectar com o servidor.');
+    }
   };
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -30,7 +46,7 @@ export default function RegisterSector() {
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <Ionicons name="chevron-back" size={24} color="#000" />
             </TouchableOpacity>
-            <Text style={styles.title}>Cadastrar Setor</Text>
+            <Text style={styles.title}>Cadastrar Unidate</Text>
           </View>
 
           <View style={styles.inputGroup}>
@@ -39,27 +55,7 @@ export default function RegisterSector() {
               style={styles.input}
               placeholder="Ex: Setor 1B"
               value={nome}
-              onChangeText={setNome}
-            />
-          </View>
-
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Tipo:</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Ex: Logística"
-              value={tipo}
-              onChangeText={setTipo}
-            />
-          </View>
-
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Gerente</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Ex: Douglinhas pegacao"
-              value={gerente}
-              onChangeText={setGerente}
+              onChangeText={(e => setNome(e))}
             />
           </View>
 

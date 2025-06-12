@@ -49,9 +49,10 @@ export default function Dashboard() {
     }
   };
 
-  useEffect(() => {
+
     fetchData();
-  }, []); 
+
+
 
   return (
     <SafeAreaView style={styles.container}>

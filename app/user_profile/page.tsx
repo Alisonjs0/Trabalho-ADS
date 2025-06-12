@@ -2,11 +2,15 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Navbar from '@/components/navbar'; // ajuste o caminho conforme necessário
+import Navbar from '@/components/navbar'; 
 import { useNavigation } from '@react-navigation/native';
+
+import { useRouter } from "expo-router";
 
 export default function UserProfile() {
   const navigation = useNavigation();
+
+  const router = useRouter();
 
   const opcoes = [
     { icon: <Ionicons name="person-outline" size={20} />, label: 'Informações pessoais' },
@@ -51,9 +55,10 @@ export default function UserProfile() {
           ))}
 
           <TouchableOpacity style={styles.logout}>
-            <Ionicons name="log-out-outline" size={20} color="#D32B2D" />
+            <Ionicons name="log-out-outline" size={20} color="#D32B2D"/>
             <Text style={styles.logoutText}>Sair da conta</Text>
           </TouchableOpacity>
+
         </ScrollView>
       </View>
 
